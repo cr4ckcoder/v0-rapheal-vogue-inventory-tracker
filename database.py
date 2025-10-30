@@ -54,7 +54,7 @@ def init_db():
     
     # TRANSACTION table
     cursor.execute("""
-        CREATE TABLE IF NOT EXISTS transaction (
+        CREATE TABLE IF NOT EXISTS [transaction] (
             transaction_id INTEGER PRIMARY KEY AUTOINCREMENT,
             product_ean TEXT NOT NULL,
             store_id INTEGER NOT NULL,
@@ -92,6 +92,21 @@ def seed_initial_data():
                 ("Store 2",),
                 ("Store 3",),
                 ("Store 4",),
+                ("ECommerce",)
             ]
             cursor.executemany("INSERT INTO store (store_name) VALUES (?)", stores)
+            print("Default stores created.")
+
+        # Check if user already exists
+        from auth import hash_password
+        cursor.execute("SELECT COUNT(*) FROM user")
+        if cursor.fetchone()[0] == 0:
+            try:
+                cursor.execute(
+                    "INSERT INTO user (username, password_hash) VALUES (?, ?)",
+                    ("admin", hash_password("admin123"))
+                )
+                print("Default admin user created: admin / admin123")
+            except Exception as e:
+                print(f"Error creating default user: {e}")
             conn.commit()

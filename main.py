@@ -112,7 +112,7 @@ async def import_inventory(file: UploadFile = File(...), username: str = Depends
                     
                     # Log transaction
                     cursor.execute("""
-                        INSERT INTO transaction (product_ean, store_id, quantity_change, transaction_type)
+                        INSERT INTO [transaction] (product_ean, store_id, quantity_change, transaction_type)
                         VALUES (?, ?, ?, 'Import')
                     """, (ean, store_id, quantity))
                     
@@ -219,12 +219,12 @@ async def transfer_inventory(file: UploadFile = File(...), username: str = Depen
                     
                     # Log transactions
                     cursor.execute("""
-                        INSERT INTO transaction (product_ean, store_id, quantity_change, transaction_type)
+                        INSERT INTO [transaction] (product_ean, store_id, quantity_change, transaction_type)
                         VALUES (?, ?, ?, 'Transfer')
                     """, (ean, source_store_id, -quantity))
                     
                     cursor.execute("""
-                        INSERT INTO transaction (product_ean, store_id, quantity_change, transaction_type)
+                        INSERT INTO [transaction] (product_ean, store_id, quantity_change, transaction_type)
                         VALUES (?, ?, ?, 'Transfer')
                     """, (ean, destination_store_id, quantity))
                     
@@ -322,7 +322,7 @@ async def record_sales(file: UploadFile = File(...), username: str = Depends(ver
                     
                     # Log transaction
                     cursor.execute("""
-                        INSERT INTO transaction (product_ean, store_id, quantity_change, transaction_type)
+                        INSERT INTO [transaction] (product_ean, store_id, quantity_change, transaction_type)
                         VALUES (?, ?, ?, 'Sale')
                     """, (ean, store_id, -quantity_sold))
                     
@@ -397,7 +397,7 @@ async def get_analytics(
         # Build query with filters
         query = """
             SELECT product_ean, SUM(ABS(quantity_change)) as total_movement
-            FROM transaction
+            FROM [transaction]
             WHERE transaction_type IN ('Sale', 'Transfer')
         """
         params = []
