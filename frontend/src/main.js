@@ -5,5 +5,5 @@ import { createStore } from "./store.js"
 const app = createApp(App)
 const store = createStore()
 
-app.use(store)
+app.provide('store', store)
 app.mount("#app")
