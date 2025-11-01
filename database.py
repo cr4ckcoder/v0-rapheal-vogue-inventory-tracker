@@ -109,4 +109,4 @@ def seed_initial_data():
                 print("Default admin user created: admin / admin123")
             except Exception as e:
                 print(f"Error creating default user: {e}")
-            conn.commit()
+        conn.commit()
